@@ -1,0 +1,15 @@
+body {
+  font-family: sans-serif;
+}
+button {
+  margin: 0 auto;
+  margin-top: 50px;
+  display: block;
+}
+button:disabled {
+  background-color: #c1c1c1;
+  cursor: not-allowed;
+}
+button.hidden {
+  display: none;
+}
