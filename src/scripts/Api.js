@@ -1,4 +1,11 @@
 import axios from 'axios';
+import LoadMoreBtn from './LoadMoreBtn';
+import Notiflix from 'notiflix';
+
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '.load-more',
+  isHidden: true,
+});
 
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '33912497-3359e04dc8606dd645c853c21';
@@ -15,12 +22,26 @@ export default class ApiService {
 
       const response = await axios.get(url);
       this.nextPage();
+
+      console.log(response.data.hits.length);
+      console.log(response.data.totalHits);
+
+      if (response.data.hits.length === 0 && response.data.totalHits !== 0) {
+        loadMoreBtn.hide();
+        Notiflix.Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
+      if (response.data.hits.length === 0 && response.data.totalHits === 0) {
+        loadMoreBtn.hide();
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      }
+
       return response.data.hits;
     } catch (error) {
       console.error(error);
-      Notiflix.Notify.warning(
-        "We're sorry, but you've reached the end of search results."
-      );
     }
   }
 
